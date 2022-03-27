@@ -3,4 +3,6 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 24px;
+  min-width: 500px;
+  aspect-ratio: 1;
 }
