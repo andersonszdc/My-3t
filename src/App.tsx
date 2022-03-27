@@ -31,24 +31,27 @@ function App() {
 
   useEffect(() => {
     if (Conditions(plays)) {
-    const winner = currentPlayer === 1 ? 2 : 1;
+      const winner = currentPlayer === 1 ? 2 : 1;
       console.log(`Vitória do player ${winner}`);
     }
   }, [currentPlayer, plays]);
 
   return (
-    <div className="App">
-      {plays.map((data, index) => (
-        <Item
-          key={index}
-          data={data}
-          currentPlayer={currentPlayer}
-          setCurrentPlayer={setCurrentPlayer}
-          plays={plays}
-          setPlays={setPlays}
-        />
-      ))}
-    </div>
+    <>
+      <h1 className="player"> Player {currentPlayer}</h1>
+      <div className="App">
+        {plays.map((data, index) => (
+          <Item
+            key={index}
+            data={data}
+            currentPlayer={currentPlayer}
+            setCurrentPlayer={setCurrentPlayer}
+            plays={plays}
+            setPlays={setPlays}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 

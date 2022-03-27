@@ -7,6 +7,12 @@
   aspect-ratio: 1;
 }
 
+.player {
+  text-align: center;
+  margin-bottom: 64px;
+  color: white;
+}
+
 .wrapper-item {
   display: flex;
   padding: 24px;
