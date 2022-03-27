@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Circle from "./components/Circle";
 import X from "./components/X";
+import { Conditions } from "./conditions";
 
 export const draw = {
   hidden: { pathLength: 0, opacity: 0 },
@@ -9,28 +10,43 @@ export const draw = {
     pathLength: 1,
     opacity: 1,
     transition: {
-      duration: 1,
+      duration: 0.6,
     },
   },
 };
 
-const spaces = [
-  { index: 1 },
-  { index: 2 },
-  { index: 3 },
-  { index: 4 },
-  { index: 5 },
-  { index: 6 },
-  { index: 7 },
-  { index: 8 },
-  { index: 9 },
-];
-
 function App() {
+  const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [plays, setPlays] = useState([
+    { index: 1, player: undefined },
+    { index: 2, player: undefined },
+    { index: 3, player: undefined },
+    { index: 4, player: undefined },
+    { index: 5, player: undefined },
+    { index: 6, player: undefined },
+    { index: 7, player: undefined },
+    { index: 8, player: undefined },
+    { index: 9, player: undefined },
+  ]);
+
+  useEffect(() => {
+    if (Conditions(plays)) {
+    const winner = currentPlayer === 1 ? 2 : 1;
+      console.log(`Vitória do player ${winner}`);
+    }
+  }, [currentPlayer, plays]);
+
   return (
     <div className="App">
-      {spaces.map((data, index) => (
-        <Item key={index} data={data} />
+      {plays.map((data, index) => (
+        <Item
+          key={index}
+          data={data}
+          currentPlayer={currentPlayer}
+          setCurrentPlayer={setCurrentPlayer}
+          plays={plays}
+          setPlays={setPlays}
+        />
       ))}
     </div>
   );
@@ -38,11 +54,24 @@ function App() {
 
 export default App;
 
-const Item = ({ data }: any) => {
+const Item = ({
+  data,
+  currentPlayer,
+  setCurrentPlayer,
+  plays,
+  setPlays,
+}: any) => {
   const [isClicked, setIsClicked] = useState(false);
+  const handleClick = () => {
+    setIsClicked(true);
+    setCurrentPlayer((prev: number) => (prev === 1 ? 2 : 1));
+    const newPlays = plays;
+    newPlays[data.index - 1].player = currentPlayer;
+    setPlays(newPlays);
+  };
   return (
-    <div onClick={() => setIsClicked(true)}>
-      {(isClicked && <Circle />) || <X />}
+    <div className="wrapper-item" onClick={handleClick}>
+      {isClicked && (data.player === 1 ? <Circle /> : <X />)}
     </div>
   );
 };
