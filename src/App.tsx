@@ -16,31 +16,44 @@ export const draw = {
   },
 };
 
+const DEFAULT_PLAYS = [
+  { index: 1, player: undefined },
+  { index: 2, player: undefined },
+  { index: 3, player: undefined },
+  { index: 4, player: undefined },
+  { index: 5, player: undefined },
+  { index: 6, player: undefined },
+  { index: 7, player: undefined },
+  { index: 8, player: undefined },
+  { index: 9, player: undefined },
+];
+
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
   const [displayWinner, setDisplayWinner] = useState(false);
-  const [plays, setPlays] = useState([
-    { index: 1, player: undefined },
-    { index: 2, player: undefined },
-    { index: 3, player: undefined },
-    { index: 4, player: undefined },
-    { index: 5, player: undefined },
-    { index: 6, player: undefined },
-    { index: 7, player: undefined },
-    { index: 8, player: undefined },
-    { index: 9, player: undefined },
-  ]);
+  const [displayDraw, setDisplayDraw] = useState(false);
+  const [plays, setPlays] = useState(DEFAULT_PLAYS);
+
+  const resetGame = () => {
+    setCurrentPlayer(1);
+    setDisplayWinner(false);
+    setPlays(DEFAULT_PLAYS);
+  };
 
   useEffect(() => {
     if (Conditions(plays)) {
-      const winner = currentPlayer === 1 ? 2 : 1;
       setDisplayWinner(true);
-      console.log(`Vitória do player ${winner}`);
+    } else if (plays.every((play) => play.player !== undefined)) {
+      setDisplayDraw(true);
     }
   }, [currentPlayer, plays]);
 
   return (
     <>
+      <div className="action">
+        <button onClick={resetGame}>reset</button>
+        <button onClick={resetGame}>setting</button>
+      </div>
       {!displayWinner && <h1 className="player"> Player {currentPlayer}</h1>}
       <div className="App">
         {plays.map((data, index) => (
@@ -54,11 +67,12 @@ function App() {
           />
         ))}
       </div>
-      {displayWinner && (
+      {(displayWinner || displayDraw) && (
         <Portal>
           <div className="scoreboard-wrapper">
             <div className="scoreboard">
-              Player {currentPlayer === 1 ? 2 : 1} won!
+              {displayWinner && `Player ${currentPlayer === 1 ? 2 : 1} won!`}
+              {displayDraw && `Draw!`}
             </div>
           </div>
         </Portal>
@@ -76,10 +90,8 @@ const Item = ({
   plays,
   setPlays,
 }: any) => {
-  const [isClicked, setIsClicked] = useState(false);
   const handleClick = () => {
     if (!plays[data.index - 1].player) {
-      setIsClicked(true);
       setCurrentPlayer((prev: number) => (prev === 1 ? 2 : 1));
       const newPlays = plays;
       newPlays[data.index - 1].player = currentPlayer;
@@ -88,7 +100,8 @@ const Item = ({
   };
   return (
     <div className="wrapper-item" onClick={handleClick}>
-      {isClicked && (data.player === 1 ? <Circle /> : <X />)}
+      {data.player === 1 && <Circle />}
+      {data.player === 2 && <X />}
     </div>
   );
 };
