@@ -60,3 +60,32 @@
   cursor: pointer;
   font-family: "Roboto", sans-serif;
 }
+
+.settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.settings form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  height: 100%;
+  background-color: white;
+  width: 50%;
+}
+
+.settings-action {
+  display: flex;
+  flex-direction: column;
+
+  grid-column: 1/4;
+  width: 100%;
+}

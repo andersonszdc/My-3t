@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Circle from "./components/Circle";
+import InitialSettings from "./components/InitialSettings";
 import X from "./components/X";
 import { Conditions } from "./conditions";
 import Portal from "./HOC/Portal";
@@ -29,15 +30,40 @@ const DEFAULT_PLAYS = [
 ];
 
 function App() {
+  const [players, setPlayers] = useState([
+    { player: 1, name: "Player 1" },
+    { player: 2, name: "Player 2" },
+  ]);
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
   const [displayWinner, setDisplayWinner] = useState(false);
+  const [displaySettings, setDisplaySettings] = useState(false);
   const [displayDraw, setDisplayDraw] = useState(false);
   const [plays, setPlays] = useState(DEFAULT_PLAYS);
 
   const resetGame = () => {
     setCurrentPlayer(1);
     setDisplayWinner(false);
-    setPlays(DEFAULT_PLAYS);
+    setPlays([
+      { index: 1, player: undefined },
+      { index: 2, player: undefined },
+      { index: 3, player: undefined },
+      { index: 4, player: undefined },
+      { index: 5, player: undefined },
+      { index: 6, player: undefined },
+      { index: 7, player: undefined },
+      { index: 8, player: undefined },
+      { index: 9, player: undefined },
+    ]);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newValue = players;
+    newValue[index - 1].name = e.target.value;
+    setPlayers(() => [...newValue]);
+    console.log(newValue);
   };
 
   useEffect(() => {
@@ -52,9 +78,11 @@ function App() {
     <>
       <div className="action">
         <button onClick={resetGame}>reset</button>
-        <button onClick={resetGame}>setting</button>
+        <button onClick={() => setDisplaySettings(true)}>settings</button>
       </div>
-      {!displayWinner && <h1 className="player"> Player {currentPlayer}</h1>}
+      {!displayWinner && (
+        <h1 className="player">{players[currentPlayer - 1].name}</h1>
+      )}
       <div className="App">
         {plays.map((data, index) => (
           <Item
@@ -71,10 +99,20 @@ function App() {
         <Portal>
           <div className="scoreboard-wrapper">
             <div className="scoreboard">
-              {displayWinner && `Player ${currentPlayer === 1 ? 2 : 1} won!`}
+              {displayWinner &&
+                `${players[currentPlayer === 1 ? 1 : 0].name} won!`}
               {displayDraw && `Draw!`}
             </div>
           </div>
+        </Portal>
+      )}
+      {displaySettings && (
+        <Portal>
+          <InitialSettings
+            setDisplaySettings={setDisplaySettings}
+            players={players}
+            handleChange={handleChange}
+          />
         </Portal>
       )}
     </>
