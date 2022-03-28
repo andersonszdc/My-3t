@@ -41,7 +41,7 @@ function App() {
 
   return (
     <>
-      <h1 className="player"> Player {currentPlayer}</h1>
+      {!displayWinner && <h1 className="player"> Player {currentPlayer}</h1>}
       <div className="App">
         {plays.map((data, index) => (
           <Item
