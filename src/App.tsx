@@ -3,6 +3,7 @@ import "./App.css";
 import Circle from "./components/Circle";
 import X from "./components/X";
 import { Conditions } from "./conditions";
+import Portal from "./HOC/Portal";
 
 export const draw = {
   hidden: { pathLength: 0, opacity: 0 },
@@ -17,6 +18,7 @@ export const draw = {
 
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState<1 | 2>(1);
+  const [displayWinner, setDisplayWinner] = useState(false);
   const [plays, setPlays] = useState([
     { index: 1, player: undefined },
     { index: 2, player: undefined },
@@ -32,6 +34,7 @@ function App() {
   useEffect(() => {
     if (Conditions(plays)) {
       const winner = currentPlayer === 1 ? 2 : 1;
+      setDisplayWinner(true);
       console.log(`Vitória do player ${winner}`);
     }
   }, [currentPlayer, plays]);
@@ -51,6 +54,15 @@ function App() {
           />
         ))}
       </div>
+      {displayWinner && (
+        <Portal>
+          <div className="scoreboard-wrapper">
+            <div className="scoreboard">
+              Player {currentPlayer === 1 ? 2 : 1} won!
+            </div>
+          </div>
+        </Portal>
+      )}
     </>
   );
 }
@@ -66,11 +78,13 @@ const Item = ({
 }: any) => {
   const [isClicked, setIsClicked] = useState(false);
   const handleClick = () => {
-    setIsClicked(true);
-    setCurrentPlayer((prev: number) => (prev === 1 ? 2 : 1));
-    const newPlays = plays;
-    newPlays[data.index - 1].player = currentPlayer;
-    setPlays(newPlays);
+    if (!plays[data.index - 1].player) {
+      setIsClicked(true);
+      setCurrentPlayer((prev: number) => (prev === 1 ? 2 : 1));
+      const newPlays = plays;
+      newPlays[data.index - 1].player = currentPlayer;
+      setPlays(newPlays);
+    }
   };
   return (
     <div className="wrapper-item" onClick={handleClick}>
